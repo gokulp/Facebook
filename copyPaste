@@ -1,0 +1,24 @@
+pathPrefix("albums") {
+      pathEnd {
+        post {
+          entity(as[Album]) { album =>
+            completeWithLocationHeader(
+              resourceId = albumService.createAlbum(album),
+              ifDefinedStatus = 201, ifEmptyStatus = 409)
+          }
+        }
+      } ~
+        path(Segment) { id =>
+          get {
+            complete(albumService.getAlbum(id.toInt))
+          } ~
+            put {
+              entity(as[AlbumUpdate]) { update =>
+                complete(albumService.updateAlbum(id.toInt, update))
+              }
+            } ~
+            delete {
+              complete(204, albumService.deleteAlbum(id.toInt))
+            }
+        }
+    }

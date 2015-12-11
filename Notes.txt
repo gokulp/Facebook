@@ -1,0 +1,113 @@
+First 15 mins of Lecture 20:
+Lecture 21
+Read paper on user behaviour studies to write the simulator. -- Need to include in README
+
+
+
+curl -v -H "Content-Type: application/json"    -X POST http://localhost:5001/profiles -d '{"id": 1, "birthday": "09021988", "email":["gokulpalwe@gmail.com", "gokulpalwe@ufl.edu", "gok00l@yahoo.com"], "first_name":"Gokul", "gender":"Male", "last_name":"Palwe", "public_key":"dfasfsdauiouoilkfjsda"}'
+    id:Int, birthday:String, email:List[String], first_name:String, gender:String,last_name:String, public_key:String
+-d '{"id": "1", "birthday": "09021988", "email":["gokulpalwe@gmail.com", "gokulpalwe@ufl.edu", "gok00l@yahoo.com"], "first_name":"Gokul", "gender":"Male", "last_name":"Palwe", "public_key":"dfasfsdauiouoilkfjsda"}'
+
+curl -v http://localhost:5001/profiles/1;echo
+
+curl -v -H "Content-Type: application/json" \
+   -X POST http://localhost:5000/questions \
+   -d '{"id": "test", "title": "MyTitle", "text":["The text of my question"]}'
+
+curl -v -H "Content-Type: application/json" \
+   -X PUT http://localhost:5000/questions/test \
+   -d '{"text":["Another text"]}'
+
+id:Int, from:Int, caption:String, object_id: String, message:String
+
+curl -v -H "Content-Type: application/json"    -X POST http://localhost:5001/posts -d '{"id": 1, "from": 1, "caption":"caption String", "object_id":"gokulpalwe@gmail.com", "message":"Gokul"}'
+
+
+curl -v http://localhost:5001/photos/1;echo
+
+curl -v http://localhost:5001/albums/3174;echo
+3174
+
+
+
+
+
+
+
+
+
+
+//Code for client so far
+import akka.actor.Actor
+import akka.io.IO
+import akka.pattern.ask
+import org.json4s.{DefaultFormats, Formats}
+import spray.can.Http
+import spray.client.pipelining._
+import spray.http._
+
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.util.{Success, Failure}
+import entities._
+
+import spray.httpx.Json4sSupport
+
+/*
+import spray.json.{JsonFormat, DefaultJsonProtocol}
+
+object FacebookJsonProtocol extends DefaultJsonProtocol {
+  implicit val profileFormat = jsonFormat2(Profile)
+  implicit val postFormat = jsonFormat2(entities.Post)
+  //implicit def googleApiResultFormat[T :JsonFormat] = jsonFormat2(GoogleApiResult.apply[T])
+}
+*/
+
+/**
+ * Created by gokul on 11/30/15.
+ */
+
+class Client (host: String , bindport: Int, id:Int, aggressionLevel: Int/*1: Reader 2: Normal User 3: Aggressive poster*/) extends Actor with Json4sSupport {
+  implicit val system = context.system
+  import system.dispatcher
+  //val pipeline: HttpRequest => Future[HttpResponse] = sendReceive
+  //val response: Future[HttpResponse] = pipeline(Get(hosts+"profiles/1"))
+
+  val pipeline: Future[SendReceive] =
+    for (
+      Http.HostConnectorInfo(connector, _) <-
+      IO(Http) ? Http.HostConnectorSetup(host, port = bindport)
+    ) yield sendReceive(connector)
+  val request = Get("/profiles/1")
+  val response: Future[HttpResponse] = pipeline.flatMap(_(request))
+  var name = self.actorRef.path.name
+  override def receive: Receive = {
+    case GetProfile =>
+      val request = Get("/profiles/"+id)
+      val response: Future[HttpResponse] = pipeline.flatMap(_(request))
+      response onComplete{
+        case Success(response) =>
+          println("Returned Success")
+        case Failure(error) =>
+          println(error, "failed to get profile")
+          context.system.scheduler.scheduleOnce(500 milliseconds, self, GetProfile)
+      }
+    //case UpdateProfile =>
+  }
+
+  override implicit def json4sFormats: Formats = DefaultFormats
+}
+
+
+
+//Admin contents
+implicit val system = context.system
+  import system.dispatcher
+  val hosts = "http://localhost:5001/"
+  val pipeline: HttpRequest => Future[HttpResponse] = sendReceive
+  val response: Future[HttpResponse] = pipeline(Get(hosts+"profiles/1"))
+
+  override def receive: Receive = {
+    case initiate =>
+      println("Initiate Actors")
+  }
