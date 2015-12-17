@@ -53,6 +53,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-testkit"    % AkkaVersion  % "test",
     "io.spray"          %% "spray-testkit"   % SprayVersion % "test",
     "org.specs2"        %% "specs2"          % "2.3.13"     % "test"
+//    ,"org.apache.commons" % "commons-lang3" % "3.1",
+//    "org.apache.commons" % "commons-codec" % "1.9"
   )
 }
 

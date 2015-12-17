@@ -4,6 +4,7 @@ import akka.io.IO
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
+import services.{PageService, ProfileService}
 import spray.can.Http
 
 import scala.concurrent.duration.Duration
@@ -20,6 +21,7 @@ object Facebook extends App {
     implicit val system = ActorSystem("facebook");
     implicit val executionContext = system.dispatcher
     implicit val timeout = new Timeout(Duration.create(10, "seconds"))
+    //var pageServer = system.actorOf(Props(classOf[PageService], executionContext), name="pageServer")
 
     val api = system.actorOf(Props(new RestInterface))
     IO(Http).ask(Http.Bind(listener = api, interface = host, port = bindport))

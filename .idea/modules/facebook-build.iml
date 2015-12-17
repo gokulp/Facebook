@@ -204,5 +204,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="commons-codec-1.91" level="project" />
   </component>
 </module>

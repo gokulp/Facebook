@@ -11,4 +11,7 @@ case class Profile(id:Int, /*user identity*/
                    last_name:String, /*last_name of the user*/
                    public_key:String,
                    albums: List[Int],
-                   photos: List[Int]) /*public_key of the user*/
+                   photos: List[Int],
+                   likedpages:List[Int],
+                   userposts: List[Int],
+                   token:String) /*public_key of the user*/

@@ -29,9 +29,19 @@ curl -v http://localhost:5001/albums/3174;echo
 3174
 
 
+curl -v http://localhost:5001/pages/1;echo
 
 
+case class Page(id:Int, /*page ID*/
+                access_token:String, /* access_token for the page - only possesed by the administrators */
+                can_checkin:Boolean, /* can user checkin with this page */
+                can_post:Boolean, /* can user post on this page */
+                email:List[String], /* List of the email addresses of the administrators or organization */
+                username:String, /* name of the page */
+                likes:Long) /* number of likes on the page */
 
+
+curl -v -H "Content-Type: application/json"    -X POST http://localhost:5001/pages -d '{"id": 1, "access_token": "afdsfrandom", "can_checkin":0, "can_post":1, "email":["gokulpalwe@gmail.com", "gokulpalwe@ufl.edu", "gok00l@yahoo.com"], "username":"Palwe", "likes":304}'
 
 
 

@@ -1,7 +1,9 @@
 /**
  * Created by gokul on 11/29/15.
  */
+
 import resources._
+import security.RSAEncryptor
 import services._
 import spray.routing._
 
@@ -10,6 +12,7 @@ import scala.language.postfixOps
 
 class RestInterface(implicit val executionContext: ExecutionContext) extends HttpServiceActor with Resources {
 
+  val securityService = new SecurityService
   val profileService = new ProfileService
   val postService = new UserPostService
   val pageService = new PageService
