@@ -5,9 +5,10 @@ package entities
  */
 case class UserPostUpdate(
                            from:Int,
-                           caption:Option[String],
-                           object_id: Option[String],
-                           message:Option[String],
-                           privacy:Option[String],
-                           sharedWith:Option[List[Int]],
-                           token:String)
+//                           caption:Option[String] = None,
+//                           object_id: Option[String] = None,
+//                           message:Option[String] = None,
+                           privacy:Option[String] = None,
+//                           sharedWith:Option[List[Int]] = None,
+                           token:String,
+                           hiddenValue:Option[String] = None)

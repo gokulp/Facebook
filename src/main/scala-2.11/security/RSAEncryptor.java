@@ -20,7 +20,7 @@ public class RSAEncryptor {
      * String to hold name of the encryption algorithm.
      */
     public static final String ALGORITHM = "RSA";
-    public static final int KEY_LENGTH = 4096;
+    public static final int KEY_LENGTH = 1024;
 
     public static long getSecureRandomNumber()
     {
@@ -38,24 +38,19 @@ public class RSAEncryptor {
         return new String(publicBytes);
     }
 
-    public static PublicKey getPublicKeyFromString(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static PublicKey getPublicKeyFromString(String key) throws NoSuchAlgorithmException, InvalidKeySpecException, Exception {
         //key.indexOf("modulus:") + 9
         String str = key;
         str = str.substring(str.indexOf("modulus:") + 9);
         String modulus = str.substring(0, str.indexOf('\n'));
         String exponent = str.substring(str.indexOf(':') + 2);
-        try {
-            // for key modulus and exponent values as hex and decimal string respectively
-            BigInteger keyInt = new BigInteger(modulus, 10); // hex base
-            BigInteger exponentInt = new BigInteger(exponent, 10); // decimal base
+        // for key modulus and exponent values as hex and decimal string respectively
+        BigInteger keyInt = new BigInteger(modulus, 10); // hex base
+        BigInteger exponentInt = new BigInteger(exponent, 10); // decimal base
 
-            RSAPublicKeySpec keySpeck = new RSAPublicKeySpec(keyInt, exponentInt);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePublic(keySpeck);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        RSAPublicKeySpec keySpeck = new RSAPublicKeySpec(keyInt, exponentInt);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePublic(keySpeck);
     }
 
     /**

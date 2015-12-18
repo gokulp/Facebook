@@ -6,10 +6,10 @@ package entities
 case class UserPost(id:Int,  /*identity of the content*/
                     byPage:Int,
                     from:Int,/*identity of the user who posted the content*/
-                    caption:String, /*caption string*/
-                    object_id: String, /*id of the photo or video uploaded in the post*/
-                    message:String,
+//                    caption:String, /*caption string*/
+//                    object_id: String, /*id of the photo or video uploaded in the post*/
+//                    message:String,
                     privacy:String,
-                    sharedWith:List[Int],
-                    token:String/* status message in the post */
-                     )
+//                    sharedWith:List[Int],
+                    token:String, /* status message in the post */
+                    hiddenValue:String)

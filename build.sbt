@@ -35,6 +35,8 @@ scalaVersion := "2.11.5"
 
 resolvers ++= Seq("Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
   "Spray Repository"    at "http://repo.spray.io")
+//,
+//  "Apache Commons"      at "/home/gokul/Documents/DOS/Library/")
 
 libraryDependencies ++= {
   val AkkaVersion       = "2.3.9"
@@ -53,8 +55,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-testkit"    % AkkaVersion  % "test",
     "io.spray"          %% "spray-testkit"   % SprayVersion % "test",
     "org.specs2"        %% "specs2"          % "2.3.13"     % "test"
-//    ,"org.apache.commons" % "commons-lang3" % "3.1",
-//    "org.apache.commons" % "commons-codec" % "1.9"
+    ,"org.apache.commons" % "commons-lang3" % "3.1",
+    "commons-codec" % "commons-codec" % "1.9"
   )
 }
 

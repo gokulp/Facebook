@@ -121,3 +121,18 @@ implicit val system = context.system
     case initiate =>
       println("Initiate Actors")
   }
+
+
+  def getSecureToken(id:Int): Future[Option[String]] = Future {
+    var encrypted:String = ""
+    userPublicKeys.get(id) match {
+      case None => None
+      case Some(key) =>
+      val num = RSAEncryptor.getSecureRandomNumber()
+      secureNumberSent(id) = num
+      encrypted = RSAEncryptor.encrypt(num, userPublicKeys(id))
+      println("Sending "+ num+" token as "+ encrypted)
+      //encrypted = RSAEncryptor.signContent(encrypted, privateKey)
+        Some(encrypted)
+    }
+  }

@@ -62,16 +62,23 @@ trait Resource extends MyHttpService {
             statService.addOneMore()
             entity(as[Profile]) { profile =>
               // No authentication is needed as this step is like a new user registration
+              //println(profile)
+              var flag:Boolean = true
               var toCheck:Option[Profile] = None
               if (profileService.profiles.get(profile.id) == toCheck){
-                println("Creting frined List and security profile")
+                //println("Creting frined List and security profile")
                 val friends = FriendList(profile.id, List(), List(), "")
-                friendListService.createFriendList(friends)
-                securityService.addPublicKeyForUser(profile.id, profile.public_key)
+                friendListService.createFriendList(friends)// = friends
+                if (!securityService.addPublicKeyForUser(profile.id, profile.public_key))
+                  flag = false
               }
-              completeWithLocationHeader(
-                resourceId = profileService.createProfile(profile),
-                ifDefinedStatus = 201, ifEmptyStatus = 409)
+              if (flag) {
+                completeWithLocationHeader(
+                  resourceId = profileService.createProfile(profile),
+                  ifDefinedStatus = 201, ifEmptyStatus = 409)
+              } else {
+                complete (501, "Error in processing publicKey")
+              }
             }
           }
         } ~
@@ -177,14 +184,27 @@ trait Resource extends MyHttpService {
           put {
             entity(as[FriendRequest]) { friendRequest =>
               if (securityService.authenticateUser(friendRequest.idFrom, friendRequest.token).equals("Yes")) {
-                complete(friendListService.followFriend(friendRequest.idFrom, friendRequest.idTo))
+                complete(friendListService.followFriend(friendRequest.idFrom, friendRequest.idTo, friendRequest.fromKey))
               } else {
                 complete(500, "Authentication Failure")
               }
             }
           }
-        }
-      } ~
+        } ~
+          path(Segment) { id =>
+            get {
+              entity(as[Authentication]) { token =>
+                println(token)
+                if (securityService.authenticateUser(token.id, token.token).equals("Yes")){
+                  println("Sending friend list back!!!!!!!!!!!!!!!!!")
+                  complete(friendListService.getPendingRequests(token.id))
+                } else {
+                  complete(500, "Authentication Error")
+                }
+              }
+            }
+          }
+      }~
       pathPrefix("confirmfriendRequest") {
         pathEnd {
           put {

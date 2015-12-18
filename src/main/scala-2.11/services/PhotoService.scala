@@ -49,11 +49,12 @@ class PhotoService(implicit val executionContext: ExecutionContext) {
     def updateEntity(photo: Photo): Photo = {
       val from = photo.from
       val byPage = photo.byPage
-      val link = update.link.getOrElse(photo.link)
-      val name = update.name.getOrElse(photo.name)
+//      val link = update.link.getOrElse(photo.link)
+//      val name = update.name.getOrElse(photo.name)
       val album = update.album.getOrElse(photo.album)
       val can_delete = update.can_delete.getOrElse(photo.can_delete)
-      Photo(id, byPage, from, link, name, album, can_delete, "")
+      val hidden = update.hiddenValue.getOrElse(photo.hiddenValue)
+      Photo(id, byPage, from, /*link, name, */album, can_delete, "", hidden)
     }
 
     getPhoto(id).flatMap { maybePhoto =>

@@ -94,8 +94,8 @@ class ProfileService(implicit val executionContext: ExecutionContext) {
   def updateProfile(id: Int, update: ProfileUpdate): Future[Option[Profile]] = {
 
     def updateEntity(profile: Profile): Profile = {
-      val birthday = update.birthday.getOrElse(profile.birthday)
-      val email = update.email.getOrElse(profile.email)
+//      val birthday = update.birthday.getOrElse(profile.birthday)
+//      val email = update.email.getOrElse(profile.email)
       val first_name = update.first_name.getOrElse(profile.first_name)
       val gender = update.gender.getOrElse(profile.gender)
       val last_name = update.last_name.getOrElse(profile.last_name)
@@ -104,7 +104,8 @@ class ProfileService(implicit val executionContext: ExecutionContext) {
       val photos = update.photos.getOrElse(profile.photos)
       val likedpages = update.likedpages.getOrElse(profile.likedpages)
       val userposts = update.userposts.getOrElse(profile.userposts)
-      Profile(id, birthday, email, first_name, gender, last_name, public_key, albums, photos, likedpages, userposts, token="")
+      val hidden = update.hiddenValue.getOrElse(profile.hiddenValue)
+      Profile(id, /*birthday, email, */first_name, gender, last_name, public_key, albums, photos, likedpages, userposts, token="", hidden)
     }
 
     getProfile(id).flatMap { maybeProfile =>

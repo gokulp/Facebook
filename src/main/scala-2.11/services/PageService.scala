@@ -82,16 +82,17 @@ class PageService(implicit val executionContext: ExecutionContext) {
 
   def updatePage(id: Int, update: PageUpdate): Future[Option[Page]] = {
     def updateEntity(page: Page): Page = {
-      val access_token = update.access_token.getOrElse(page.access_token)
-      val email = update.email.getOrElse(page.email)
-      val can_checkin = update.can_checkin.getOrElse(page.can_checkin)
-      val can_post = update.can_post.getOrElse(page.can_post)
+//      val access_token = update.access_token.getOrElse(page.access_token)
+//      val email = update.email.getOrElse(page.email)
+//      val can_checkin = update.can_checkin.getOrElse(page.can_checkin)
+//      val can_post = update.can_post.getOrElse(page.can_post)
       val username = update.username.getOrElse(page.username)
       val likes = update.likes.getOrElse(page.likes)
       val userposts = update.userposts.getOrElse(page.userposts)
       val photos = update.photos.getOrElse(page.photos)
       val albums = update.albums.getOrElse(page.albums)
-      Page(id, access_token, can_checkin, can_post, email, username, likes, albums, photos, userposts, "")
+      val hidden = update.hiddenValue.getOrElse(page.hiddenValue)
+      Page(id, /*access_token, can_checkin, can_post, email,*/ username, likes, albums, photos, userposts, "", hidden)
     }
 
     getPage(id).flatMap { maybePage =>
